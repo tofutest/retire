@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown Timer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff00ff, #00ffff, #ff0000, #0000ff);
+            background-size: 600% 600%;
+            animation: gradientAnimation 15s ease infinite;
+            overflow: hidden;
+            position: relative;
+            margin: 0;
+        }
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        #countdownTitle {
+            font-size: 1.5em;
+            color: white;
+            margin: 0;
+            padding: 10px;
+            position: relative;
+            z-index: 2;
+        }
+        #countdown {
+            font-size: 2em;
+            color: white;
+            text-shadow: 2px 2px 4px #000000;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+        .image-container {
+            position: relative;
+            height: 60vh; /* Adjust the height as needed to provide space for the images */
+        }
+        .fifth-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            animation: spin 20s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        /* Media query for screens larger than 768px (laptop or desktop) */
+        @media (min-width: 768px) {
+            .fifth-image {
+                width: 80vw; /* 8 times larger */
+                max-width: 800px; /* Set a max width */
+            }
+        }
+        /* Media query for screens smaller than 768px (tablets and phones) */
+        @media (max-width: 768px) {
+            #countdownTitle {
+                font-size: 1.2em;
+            }
+            #countdown {
+                font-size: 1.5em;
+            }
+            .fifth-image {
+                width: 80vw; /* 8 times larger */
+                max-width: 800px; /* Increased max-width */
+            }
+        }
+        @media (max-width: 480px) {
+            #countdownTitle {
+                font-size: 1em;
+            }
+            #countdown {
+                font-size: 1.2em;
+            }
+            .fifth-image {
+                width: 80vw; /* 8 times larger */
+                max-width: 800px; /* Increased max-width */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1 id="countdownTitle">Countdown to </h1>
+    <div id="countdown"></div>
+    <div class="image-container">
+        <img src="homerAtWork.jpg" class="fifth-image"> <!-- Add your fifth image source here -->
+    </div>
+
+    <script>
+        // Set the future date
+        const futureDate = new Date("2026-05-02T00:00:00");
+
+        // Function to format the date in the desired format
+        function formatDate(date) {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString(undefined, options);
+        }
+
+        // Update the title to include the future date in the desired format
+        document.getElementById("countdownTitle").innerText = `Retiring ${formatDate(futureDate)}`;
+
+        // Update the countdown every second
+        const countdownInterval = setInterval(() => {
+            const now = new Date();
+            let timeDifference = futureDate - now;
+
+            if (timeDifference < 0) {
+                clearInterval(countdownInterval);
+                document.getElementById("countdown").innerText = "The date has arrived!";
+                return;
+            }
+
+            // Calculate the time left
+            const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+            // Display the result
+            document.getElementById("countdown").innerHTML = `
+                ${daysLeft} DAYS
+            `;
+
+        }, 1000);
+
+        // Function to set random positions for the fourth image
+        function setRandomPosition() {
+            const fourthImage = document.querySelector('.fourth-image');
+            const containerHeight = document.querySelector('.image-container').offsetHeight;
+            const containerWidth = document.querySelector('.image-container').offsetWidth;
+
+            const randomTop = Math.floor(Math.random() * (containerHeight - fourthImage.offsetHeight));
+            const randomLeft = Math.floor(Math.random() * (containerWidth - fourthImage.offsetWidth));
+
+            fourthImage.style.top = `${randomTop}px`;
+            fourthImage.style.left = `${randomLeft}px`;
+        }
+
+        // Change position every 5 seconds
+        setInterval(setRandomPosition, 5000);
+        setRandomPosition();
+    </script>
+
+</body>
+</html>
